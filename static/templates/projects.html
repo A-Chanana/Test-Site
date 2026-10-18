@@ -7,12 +7,12 @@
 {% block body %}
     <div class="ms-4"><strong>Crear nuevo proyecto</strong></div>
 
-    <form class="d-flex align-items-center gap-2 ms-4 me-4 form-text" method="POST">
+    <form class="d-flex flex-wrap align-items-center gap-2 mx-4 form-text" method="POST">
         <label for="ProjectName" class="form-label mb-0 text-nowrap">Nombre del Proyecto</label>
-        <input type="text" class="form-control" id="ProjectName" name="ProjectName" required>
+        <input type="text" class="form-control" id="ProjectName" name="ProjectName" style="width: 250px;" required>
 
         <label for="ProjectClient" class="form-label mb-0 text-nowrap">Cliente</label>
-        <input type="text" class="form-control" id="ProjectClient" name="ProjectClient" required>
+        <input type="text" class="form-control" id="ProjectClient" name="ProjectClient" style="width: 170px;" required>
 
         <button type="submit" class="btn btn-primary text-nowrap">Nuevo Proyecto</button>
     </form>

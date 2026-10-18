@@ -12,12 +12,12 @@
 
     <div class="ms-4"><strong>Crear nueva tarea</strong></div>
 
-    <form class="d-flex align-items-center gap-2 ms-4 me-4 form-text" method="POST">
+    <form class="d-flex flex-wrap align-items-center gap-2 mx-4 form-text" method="POST">
         <label for="TaskName" class="form-label mb-0 text-nowrap">Nombre de la Tarea</label>
-        <input type="text" class="form-control" id="TaskName" name="TaskName" required>
+        <input type="text" class="form-control" id="TaskName" name="TaskName" required style="width: 250px;">
 
-        <label for="TaskDate" class="form-label mb-0 text-nowrap">Fecha de Realizacion</label>
-        <input type="date" class="form-control" id="TaskDate" name="TaskDate" required>
+        <label for="TaskDate" class="form-label mb-0 text-nowrap">Fecha Limite</label>
+        <input type="date" class="form-control" id="TaskDate" name="TaskDate" required style="width: 170px;">
 
         <button type="submit" class="btn btn-primary text-nowrap">Nueva Tarea</button>
     </form>

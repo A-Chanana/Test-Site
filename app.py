@@ -55,4 +55,4 @@ def task(task_id):
     return render_template("task.html", task=id[0]), 200
 
 
-app.run(debug=True)
+app.run(host='0.0.0.0', port=5000, debug=True)
