@@ -21,15 +21,17 @@
 
     {% for project in projects %}
         <div class="container-fluid px-5">
-        <div class="row p-1 px-1">
-            <div class="col border p-2">
-                <h6 class="ms-1">{{ project[1] }}</h6>
+            <div class="row p-1 px-1 align-items-stretch">
                 
-                <label class="ms-1 text-muted fs-6">
-                    Cliente: {{ project[2] }}
-                </label>
+                <div class="col border p-2 d-flex flex-column justify-content-center">
+                    <a href="{{ url_for('project', project_id=project[0]) }}" class="text-decoration-none text-reset">
+                        <h6 class="ms-1 mb-1">{{ project[1] }}</h6>
+                        <span class="ms-1 text-muted fs-6">
+                            Cliente: {{ project[2] }}
+                        </span>
+                    </a>
+                </div>
             </div>
-        </div>
         </div>
     {% endfor %}
 

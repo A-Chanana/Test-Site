@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <title>{{ project[1] }}</title>
+{% endblock %}
+
+{% block body %}
+    <div class="ms-4"><strong>{{ project[1] }}</strong></div>
+    <div class="ms-4 text-muted fs-6">Cliente: {{ project[2] }}</div>
+
+    <hr class="ms-4 me-4 border-2 border-top" />
+
+    <div class="ms-4"><strong>Crear nueva tarea</strong></div>
+
+    <form class="d-flex align-items-center gap-2 ms-4 me-4 form-text" method="POST">
+        <label for="TaskName" class="form-label mb-0 text-nowrap">Nombre de la Tarea</label>
+        <input type="text" class="form-control" id="TaskName" name="TaskName" required>
+
+        <label for="TaskDate" class="form-label mb-0 text-nowrap">Fecha de Realizacion</label>
+        <input type="date" class="form-control" id="TaskDate" name="TaskDate" required>
+
+        <button type="submit" class="btn btn-primary text-nowrap">Nueva Tarea</button>
+    </form>
+    
+    <hr class="ms-4 me-4 border-2 border-top" />
+
+    {% for task in tasks %}
+        <div class="container-fluid px-5">
+            <div class="row p-1 px-1 align-items-stretch">
+                
+                <div class="col border p-2 d-flex flex-column justify-content-center">
+                    <a href="{{ url_for('task', task_id=task[0]) }}" class="text-decoration-none text-reset">
+                        <h6 class="ms-1 mb-1">{{ task[1] }}</h6>
+                        <span class="ms-1 text-muted fs-6">
+                            Fecha Limite: {{ task[3] }}
+                        </span>
+                    </a>
+                </div>
+                
+                <div class="col-auto border p-2 align-items-center d-flex">
+                    <h6 class="me-2 mb-0">
+                        {% if task[4] %}
+                            Completado
+                        {% else %}
+                            Pendiente
+                        {% endif %}
+                    </h6>
+                </div>
+
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

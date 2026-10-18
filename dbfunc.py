@@ -1,18 +1,30 @@
 import psycopg2
 from psycopg2 import OperationalError
 
-
+####
+# Projects
+####
 def db_get_projects():
-    connection = psycopg2.connect(host="localhost", port=5432, dbname="postgres", user="postgres", password=1234)
+    connection = create_db_connection()
     cur = connection.cursor()
+    instantiate_projects_table(cur)
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS project (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(50) NOT NULL,
-        client VARCHAR(50) NOT NULL
-        );""")
+    cur.execute("SELECT * FROM projects;")
+    rows = cur.fetchall()
 
-    cur.execute("SELECT * FROM project;")
+    connection.commit()
+    connection.close()
+    cur.close()
+
+    return rows
+
+
+def db_get_project(project_id):
+    connection = create_db_connection()
+    cur = connection.cursor()
+    instantiate_projects_table(cur)
+
+    cur.execute("SELECT * FROM projects where ID = %s;", (project_id,))
     rows = cur.fetchall()
 
     connection.commit()
@@ -23,42 +35,15 @@ def db_get_projects():
 
 
 def db_save_project(name, client):
-    connection = psycopg2.connect(host="localhost", port=5432, dbname="postgres", user="postgres", password=1234)
+    connection = create_db_connection()
     cur = connection.cursor()
+    instantiate_projects_table(cur)
 
-    cur.execute("""CREATE TABLE IF NOT EXISTS project (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(50) NOT NULL,
-        client VARCHAR(50) NOT NULL
-        );""")
-
-    cur.execute("INSERT INTO project (name, client) VALUES (%s, %s)", (name, client))
+    cur.execute("INSERT INTO projects (name, client) VALUES (%s, %s)", (name, client))
 
     connection.commit()
     connection.close()
     cur.close()
-
-
-def db_test():
-    connection = psycopg2.connect(host="localhost", port=5432, dbname="postgres", user="postgres", password=1234)
-    cur = connection.cursor()
-
-    cur.execute("""CREATE TABLE IF NOT EXISTS project (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(50) NOT NULL,
-        client VARCHAR(50) NOT NULL
-        );""")
-
-    cur.execute("INSERT INTO project (name, client) VALUES (%s, %s)", ("Test Project", "Test Client"))
-
-    cur.execute("SELECT * FROM project;")
-    rows = cur.fetchall()
-
-    connection.commit()
-    connection.close()
-    cur.close()
-
-    print(rows)
 
 
 def is_db_valid(db_name, user, password, host="localhost", port="5432"):
@@ -85,4 +70,71 @@ def is_db_valid(db_name, user, password, host="localhost", port="5432"):
         print(f"Connection to PostgreSQL server failed: {e}")
         return False
 
-db_test()
+
+
+def create_db_connection():
+    return psycopg2.connect(host="localhost", port=5432, dbname="postgres", user="postgres", password=1234)
+
+
+def instantiate_projects_table(cur):
+    cur.execute("""CREATE TABLE IF NOT EXISTS projects (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(50) NOT NULL,
+            client VARCHAR(50) NOT NULL
+            );""")
+
+
+
+####
+# Tasks
+####
+def db_get_tasks(project_id):
+    connection = create_db_connection()
+    cur = connection.cursor()
+    instantiate_tasks_table(cur)
+
+    cur.execute("SELECT * FROM tasks WHERE project_id = %s ORDER BY due_date;", (project_id,))
+    rows = cur.fetchall()
+
+    connection.commit()
+    connection.close()
+    cur.close()
+
+    return rows
+
+
+def db_get_task(task_id):
+    connection = create_db_connection()
+    cur = connection.cursor()
+    instantiate_tasks_table(cur)
+
+    cur.execute("SELECT * FROM tasks where ID = %s;", (task_id,))
+    rows = cur.fetchall()
+
+    connection.commit()
+    connection.close()
+    cur.close()
+
+    return rows
+
+
+def db_save_task(name, project_id, due_date, completed=False):
+    connection = create_db_connection()
+    cur = connection.cursor()
+    instantiate_tasks_table(cur)
+
+    cur.execute("INSERT INTO tasks (name, project_id, due_date, completed) VALUES (%s, %s, %s, %s)", (name, project_id, due_date, completed))
+
+    connection.commit()
+    connection.close()
+    cur.close()
+
+
+def instantiate_tasks_table(cur):
+    cur.execute("""CREATE TABLE IF NOT EXISTS tasks (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(50) NOT NULL,
+            project_id INTEGER NOT NULL,
+            due_date DATE NOT NULL,
+            completed BOOLEAN DEFAULT FALSE
+            );""")

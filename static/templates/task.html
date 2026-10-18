@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <title>{{ task[1] }}</title>
+{% endblock %}
+
+{% block body %}
+    <div class="ms-4"><strong>{{ task[2] }}</strong></div>
+    <div class="ms-4 text-muted fs-6">Fecha Limite: {{ task[3] }}</div>
+
+    <hr class="ms-4 me-4 border-2 border-top" />
+
+    <div class="ms-4">
+        <strong>
+            {% if task[4] %}
+                Completado
+            {% else %}
+                Pendiente
+            {% endif %}
+        </strong>
+    </div>
+
+{% endblock %}
