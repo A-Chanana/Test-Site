@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block head %}
+    <title>Proyectos</title>
+{% endblock %}
+
+{% block body %}
+    <div class="ms-4"><strong>Crear nuevo proyecto</strong></div>
+
+    <form class="d-flex align-items-center gap-2 ms-4 me-4 form-text" method="POST">
+        <label for="ProjectName" class="form-label mb-0 text-nowrap">Nombre del Proyecto</label>
+        <input type="text" class="form-control" id="ProjectName" name="ProjectName" required>
+
+        <label for="ProjectClient" class="form-label mb-0 text-nowrap">Cliente</label>
+        <input type="text" class="form-control" id="ProjectClient" name="ProjectClient" required>
+
+        <button type="submit" class="btn btn-primary text-nowrap">Nuevo Proyecto</button>
+    </form>
+    
+    <hr class="ms-4 me-4 border-2 border-top" />
+
+    {% for project in projects %}
+        <div class="container-fluid px-5">
+        <div class="row p-1 px-1">
+            <div class="col border p-2">
+                <h6 class="ms-1">{{ project[1] }}</h6>
+                
+                <label class="ms-1 text-muted fs-6">
+                    Cliente: {{ project[2] }}
+                </label>
+            </div>
+        </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}
