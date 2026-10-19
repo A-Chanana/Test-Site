@@ -118,12 +118,24 @@ def db_get_task(task_id):
     return rows
 
 
-def db_save_task(name, project_id, due_date, completed=False):
+def db_save_task(description, project_id, due_date, completed=False):
     connection = create_db_connection()
     cur = connection.cursor()
     instantiate_tasks_table(cur)
 
-    cur.execute("INSERT INTO tasks (name, project_id, due_date, completed) VALUES (%s, %s, %s, %s)", (name, project_id, due_date, completed))
+    cur.execute("INSERT INTO tasks (description, project_id, due_date, completed) VALUES (%s, %s, %s, %s)", (description, project_id, due_date, completed))
+
+    connection.commit()
+    connection.close()
+    cur.close()
+
+
+def update_task_completion(task_id, completed):
+    connection = create_db_connection()
+    cur = connection.cursor()
+    instantiate_tasks_table(cur)
+
+    cur.execute("UPDATE tasks SET completed = %s WHERE id = %s", (completed, task_id))
 
     connection.commit()
     connection.close()
@@ -133,7 +145,7 @@ def db_save_task(name, project_id, due_date, completed=False):
 def instantiate_tasks_table(cur):
     cur.execute("""CREATE TABLE IF NOT EXISTS tasks (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(50) NOT NULL,
+            description TEXT NOT NULL,
             project_id INTEGER NOT NULL,
             due_date DATE NOT NULL,
             completed BOOLEAN DEFAULT FALSE

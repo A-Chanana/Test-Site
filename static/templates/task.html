@@ -11,13 +11,30 @@
     <hr class="ms-4 me-4 border-2 border-top" />
 
     <div class="ms-4">
-        <strong>
+        <span class="form-label mb-0 text-nowrap text-muted">Estado:</span>
+        <h6 class="mb-0">
             {% if task[4] %}
-                Completado
+                Completada
             {% else %}
                 Pendiente
             {% endif %}
-        </strong>
+        </h6>
+    </div>
+    
+    <hr class="ms-4 me-4 border-2 border-top" />
+
+    <div class="ms-4">
+        <form action="{{ url_for('task', task_id=task[0]) }}" method="POST">
+
+            <input type="hidden" name="_method" value="PUT">
+            <input type="hidden" name="TaskCompletion" value="{% if task[4] %}False{% else %}True{% endif %}">
+
+            <input type="submit" class="btn btn-primary"
+                value="{% if task[4] %}Pendiente{% else %}Completada{% endif %}"
+                >
+        </form>
+
+        <input class="btn btn-danger" type="button" value="Eliminar">
     </div>
 
 {% endblock %}
