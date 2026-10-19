@@ -33,8 +33,11 @@
                 value="{% if task[4] %}Pendiente{% else %}Completada{% endif %}"
                 >
         </form>
-
-        <input class="btn btn-danger" type="button" value="Eliminar">
+        
+        <form action="{{ url_for('task', task_id=task[0]) }}" method="POST">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="submit" class="btn btn-danger" value="Eliminar">
+        </form>
     </div>
 
 {% endblock %}

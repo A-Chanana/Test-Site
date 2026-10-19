@@ -142,6 +142,18 @@ def update_task_completion(task_id, completed):
     cur.close()
 
 
+def delete_task(task_id):
+    connection = create_db_connection()
+    cur = connection.cursor()
+    instantiate_tasks_table(cur)
+
+    cur.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
+
+    connection.commit()
+    connection.close()
+    cur.close()
+
+
 def instantiate_tasks_table(cur):
     cur.execute("""CREATE TABLE IF NOT EXISTS tasks (
             id SERIAL PRIMARY KEY,

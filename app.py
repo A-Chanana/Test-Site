@@ -56,11 +56,17 @@ def task(task_id):
     if not id:
         return "Error: Tarea no encontrada.", 404
     
-    method = request.form.get('_method', request.method)
-    if method == 'PUT':
+    if request.method == 'POST':
+        request.method = request.form.get('_method', request.method)
+
+    if request.method == 'PUT':
         completion = request.form.get('TaskCompletion', '') == 'True'
         dbfunc.update_task_completion(task_id, completion)
         id = dbfunc.db_get_task(task_id)
+    
+    if request.method == 'DELETE':
+        dbfunc.delete_task(task_id)
+        return render_template("index.html"), 200
 
     return render_template("task.html", task=id[0]), 200
 
