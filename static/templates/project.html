@@ -30,6 +30,8 @@
         <div class="container-fluid px-5">
             <div class="row p-1 px-1 align-items-stretch">
                 
+                <a class="col-auto btn btn-secondary mx-auto" href="{{ url_for('task', task_id=task[0]) }}" role="button"></a>
+
                 <div class="col border p-2 d-flex flex-column justify-content-center">
                     <a href="{{ url_for('task', task_id=task[0]) }}" class="text-decoration-none text-reset">
                         <h6 class="ms-1 mb-1">{{ task[1] }}</h6>

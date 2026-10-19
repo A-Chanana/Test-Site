@@ -8,15 +8,13 @@
     <div class="ms-4"><strong>Crear nuevo proyecto</strong></div>
 
     <form class="ms-4 d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 mx-3 form-text" method="POST">
+        <label for="ProjectName" class="form-label mb-0 text-nowrap">Nombre del Proyecto</label>
+        <input type="text" class="form-control" id="ProjectName" name="ProjectName" style="max-width: 250px;" required>
 
-    <label for="ProjectName" class="form-label mb-0 text-nowrap">Nombre del Proyecto</label>
-    <input type="text" class="form-control" id="ProjectName" name="ProjectName" style="max-width: 250px;" required>
+        <label for="ProjectClient" class="form-label mb-0 text-nowrap">Cliente</label>
+        <input type="text" class="form-control" id="ProjectClient" name="ProjectClient" style="max-width: 170px;" required>
 
-
-    <label for="ProjectClient" class="form-label mb-0 text-nowrap">Cliente</label>
-    <input type="text" class="form-control" id="ProjectClient" name="ProjectClient" style="max-width: 170px;" required>
-
-    <button type="submit" class="btn btn-primary text-nowrap">Nuevo Proyecto</button>
+        <button type="submit" class="btn btn-primary text-nowrap">Nuevo Proyecto</button>
     </form>
     
     <hr class="ms-4 me-4 border-2 border-top" />
@@ -24,6 +22,8 @@
     {% for project in projects %}
         <div class="container-fluid px-5">
             <div class="row p-1 px-1 align-items-stretch">
+                
+                <a class="col-auto btn btn-secondary mx-auto" href="{{ url_for('project', project_id=project[0]) }}" role="button"></a>
                 
                 <div class="col border p-2 d-flex flex-column justify-content-center">
                     <a href="{{ url_for('project', project_id=project[0]) }}" class="text-decoration-none text-reset">
@@ -33,6 +33,7 @@
                         </span>
                     </a>
                 </div>
+                
             </div>
         </div>
     {% endfor %}
