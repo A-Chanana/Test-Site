@@ -1,6 +1,5 @@
 import dbfunc
 from flask import Flask, render_template, request, redirect, jsonify
-import random
 
 app = Flask(__name__, template_folder='static/templates')
 
@@ -58,7 +57,7 @@ def task(task_id):
     
     if request.method == 'POST':
         request.method = request.form.get('_method', request.method)
-
+    
     if request.method == 'PUT':
         completion = request.form.get('TaskCompletion', '') == 'True'
         dbfunc.update_task_completion(task_id, completion)
