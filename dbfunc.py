@@ -44,20 +44,6 @@ def db_save_project(name, client):
     cur.close()
 
 
-
-def create_db_connection():
-    return psycopg2.connect(host="localhost", port=5432, dbname="postgres", user="postgres", password=1234)
-
-
-def instantiate_projects_table(cur):
-    cur.execute("""CREATE TABLE IF NOT EXISTS projects (
-            id SERIAL PRIMARY KEY,
-            name VARCHAR(50) NOT NULL,
-            client VARCHAR(50) NOT NULL
-            );""")
-
-
-
 ####
 # Tasks
 ####
@@ -125,16 +111,6 @@ def delete_task(task_id):
     cur.close()
 
 
-def instantiate_tasks_table(cur):
-    cur.execute("""CREATE TABLE IF NOT EXISTS tasks (
-            id SERIAL PRIMARY KEY,
-            description TEXT NOT NULL,
-            project_id INTEGER NOT NULL,
-            due_date DATE NOT NULL,
-            completed BOOLEAN DEFAULT FALSE
-            );""")
-
-
 
 def db_get_projects_and_tasks():
     connection = create_db_connection()
@@ -184,3 +160,28 @@ def is_valid_date(date_string, date_format="%Y-%m-%d"):
         return True
     except:
         return False
+
+
+
+####
+# Initialization
+####
+def instantiate_projects_table(cur):
+    cur.execute("""CREATE TABLE IF NOT EXISTS projects (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(50) NOT NULL,
+            client VARCHAR(50) NOT NULL
+            );""")
+
+def instantiate_tasks_table(cur):
+    cur.execute("""CREATE TABLE IF NOT EXISTS tasks (
+            id SERIAL PRIMARY KEY,
+            description TEXT NOT NULL,
+            project_id INTEGER NOT NULL,
+            due_date DATE NOT NULL,
+            completed BOOLEAN DEFAULT FALSE
+            );""")
+
+
+def create_db_connection():
+    return psycopg2.connect(host="localhost", port=5432, dbname="postgres", user="postgres", password=1234)
