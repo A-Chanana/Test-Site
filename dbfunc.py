@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2 import OperationalError
+from datetime import datetime
 
 ####
 # Projects
@@ -12,7 +12,6 @@ def db_get_projects():
     cur.execute("SELECT * FROM projects;")
     rows = cur.fetchall()
 
-    connection.commit()
     connection.close()
     cur.close()
 
@@ -27,7 +26,6 @@ def db_get_project(project_id):
     cur.execute("SELECT * FROM projects where ID = %s;", (project_id,))
     rows = cur.fetchall()
 
-    connection.commit()
     connection.close()
     cur.close()
 
@@ -44,31 +42,6 @@ def db_save_project(name, client):
     connection.commit()
     connection.close()
     cur.close()
-
-
-def is_db_valid(db_name, user, password, host="localhost", port="5432"):
-    try:
-        connection = psycopg2.connect(
-            dbname="postgres",
-            user=user,
-            password=password,
-            host=host,
-            port=port
-        )
-        connection.autocommit = True
-        cursor = connection.cursor()
-
-        query = "SELECT 1 FROM pg_database WHERE datname = %s;"
-        cursor.execute(query, (db_name,))
-        exists = cursor.fetchone() is not None
-
-        cursor.close()
-        connection.close()
-        return exists
-
-    except OperationalError as e:
-        print(f"Connection to PostgreSQL server failed: {e}")
-        return False
 
 
 
@@ -96,7 +69,6 @@ def db_get_tasks(project_id):
     cur.execute("SELECT * FROM tasks WHERE project_id = %s ORDER BY due_date;", (project_id,))
     rows = cur.fetchall()
 
-    connection.commit()
     connection.close()
     cur.close()
 
@@ -111,7 +83,6 @@ def db_get_task(task_id):
     cur.execute("SELECT * FROM tasks where ID = %s;", (task_id,))
     rows = cur.fetchall()
 
-    connection.commit()
     connection.close()
     cur.close()
 
@@ -162,3 +133,54 @@ def instantiate_tasks_table(cur):
             due_date DATE NOT NULL,
             completed BOOLEAN DEFAULT FALSE
             );""")
+
+
+
+def db_get_projects_and_tasks():
+    connection = create_db_connection()
+    cur = connection.cursor()
+    instantiate_projects_table(cur)
+    instantiate_tasks_table(cur)
+
+    cur.execute("""
+        SELECT p.id, p.name, p.client, t.id, t.description, t.due_date, t.completed
+        FROM projects p
+        LEFT JOIN tasks t ON p.id = t.project_id
+        ORDER BY p.id, t.due_date;
+    """)
+    rows = cur.fetchall()
+
+    connection.close()
+    cur.close()
+
+    projects_output = {}
+    
+    for row in rows:
+        #print(row)
+        p_id, p_name, p_client, t_id, t_desc, t_due, t_completed = row
+
+        if p_id not in projects_output:
+            projects_output[p_id] = {
+                "name": p_name,
+                "client": p_client,
+                "tasks": []
+            }
+
+        if t_id is not None:
+            task_dict = {
+                "id": t_id,
+                "description": t_desc,
+                "dueDate": str(t_due),
+                "completed": t_completed
+            }
+            projects_output[p_id]["tasks"].append(task_dict)
+    
+    return projects_output
+
+
+def is_valid_date(date_string, date_format="%Y-%m-%d"):
+    try:
+        datetime.strptime(date_string, date_format)
+        return True
+    except:
+        return False
